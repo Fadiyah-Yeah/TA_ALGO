@@ -193,6 +193,73 @@ void searching_data() {
     fclose(fp);
 }
 
+void sorting_data() {
+     int i, j;
+    FILE *fp = fopen("data_buku.dat", "rb");
+    if (!fp) {
+        cout << "Tidak dapat membuka file!" << endl;
+        return;
+    }
+
+    buku arr[1000]; // maksimal 1000 data buku
+    int n = 0;
+
+    // baca semua data ke array(menggunakan array karena bisa bebas sorting di RAM, yang cepat dan fleksibel)
+    while (fread(&arr[n], sizeof(buku), 1, fp)) {
+        n++;
+    }
+    fclose(fp);
+
+    if (n == 0) {
+        cout << "Tidak ada data buku untuk disorting!" << endl;
+        return;
+    }
+
+    int pilihan;
+    cout << "Sorting berdasarkan ID Buku:\n";
+    cout << "1. Ascending (kecil ke besar)\n";
+    cout << "2. Descending (besar ke kecil)\n";
+    cout << "Pilih jenis sorting (1/2): ";
+    cin >> pilihan;
+    cin.ignore();
+
+    // Bubble Sort berdasarkan ID
+   for (int i = 0; i < n - 1; i++) {
+    for (int j = 0; j < n - i - 1; j++) {
+        if ((pilihan == 1 && arr[j].id > arr[j + 1].id) ||
+            (pilihan == 2 && arr[j].id < arr[j + 1].id)) {
+            swap(arr[j], arr[j + 1]);
+        }
+    }
+}
+
+    // Tampilkan hasil sorting
+    cout << "\nData Buku Setelah Sorting Berdasarkan ID:\n";
+    cout << setfill('=') << setw(100) << " " << endl;
+    cout << setfill(' ') << setw(55) << "Data Buku (Sorted by ID)" << endl;
+    cout << setfill('=') << setw(100) << " " << endl;
+
+    cout << setfill(' ') << setw(10) << "No" << setw(1) << "|"
+         << setw(8) << "ID" << setw(1) << "|"
+         << setw(30) << "Judul" << setw(1) << "|"
+         << setw(15) << "Pengarang" << setw(1) << "|"
+         << setw(15) << "Penerbit" << setw(1) << "|"
+         << setw(8) << "Tahun" << setw(1) << "|"
+         << setw(15) << "Kategori" << setw(1) << "|" << endl;
+    cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
+
+    for (int i = 0; i < n; ++i) {
+        cout << setfill(' ') << setw(10) << i + 1 << setw(1) << "|"
+             << setw(8) << arr[i].id << setw(1) << "|"
+             << setw(30) << arr[i].judul << setw(1) << "|"
+             << setw(15) << arr[i].pengarang << setw(1) << "|"
+             << setw(15) << arr[i].penerbit << setw(1) << "|"
+             << setw(8) << arr[i].tahun << setw(1) << "|"
+             << setw(15) << arr[i].kategori << setw(1) << "|" << endl;
+    }
+
+    cout << setfill('=') << setw(100) << " " << endl;
+}
 
 //buat baca data buku dari file dengan menggunakan linked list, nanti dipake buat peminjaman
 buku* baca_data_buku()
