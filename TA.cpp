@@ -158,6 +158,42 @@ void tampil_data()
     cout << setfill('=') << setw(100) << " " << endl;
 }
 
+void searching_data() {
+    char cari[300];
+    bool found = false;
+    cout << "Masukkan Judul Buku yang dicari: ";
+    cin.ignore();
+    cin.getline(cari, 300);
+
+    FILE *fp = fopen("data_buku.dat", "rb");
+    if (!fp) {
+        cout << "Tidak dapat membuka file untuk membaca!" << endl;
+        return;
+    }
+
+    buku b;
+    while (fread(&b, sizeof(buku), 1, fp)) {
+        if (strcmp(b.judul, cari) == 0) {
+            found = true;
+            cout << "\nData ditemukan sebagai berikut:\n";
+            cout << "ID: " << b.id << endl;
+            cout << "Judul: " << b.judul << endl;
+            cout << "Pengarang: " << b.pengarang << endl;
+            cout << "Penerbit: " << b.penerbit << endl;
+            cout << "Tahun: " << b.tahun << endl;
+            cout << "Kategori: " << b.kategori << endl;
+            break; // berhenti setelah ketemu
+        }
+    }
+
+    if (!found) {
+        cout << "\nData tidak ditemukan.\n";
+    }
+
+    fclose(fp);
+}
+
+
 //buat baca data buku dari file dengan menggunakan linked list, nanti dipake buat peminjaman
 buku* baca_data_buku()
 {
