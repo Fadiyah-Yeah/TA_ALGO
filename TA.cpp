@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
-#include <cstdio>
-#include <cstring>
+#include <cstdio>//ini mirip stdio.h yang sering dipake pak hersof
+#include <cstring>//ini buat library strlen
 using namespace std;
 
 // ini struct buku nya
@@ -28,6 +28,7 @@ bool validasi_tahun(int tahun)
 // fungsi validasi judul buku, jadi kalo misal judul kurang dari yang tertera, maka bakal balik false
 bool validasi_judul(const char *judul)
 {
+    //strlen secara singkat, dia menghitung panjang karakter stringnya(termasuk spasi) 
     int len = strlen(judul); // ini buat ngitung panjang judul, panjang judul itu harus antara 1-300 karakter
     return (len >= 1 && len <= 300);
 }
@@ -155,6 +156,38 @@ void tampil_data()
 
     fclose(fp); // tutup file
     cout << setfill('=') << setw(100) << " " << endl;
+}
+
+//buat baca data buku dari file dengan menggunakan linked list, nanti dipake buat peminjaman
+buku* baca_data_buku()
+{
+    FILE *fp = fopen("data_buku.dat", "rb");
+    if (!fp)
+    {
+        cout << "File tidak ditemukan!" << endl;
+        return nullptr;
+    }
+
+    buku *head = nullptr, *tail = nullptr, *baru;
+
+    buku temp;
+    while (fread(&temp, sizeof(buku), 1, fp))
+    {
+        baru = new buku;
+        *baru = temp;
+        baru->next = nullptr;
+        baru->prev = tail;
+
+        if (!head)
+            head = baru;
+        else
+            tail->next = baru;
+
+        tail = baru;
+    }
+
+    fclose(fp);
+    return head;
 }
 
 // fungsi buat keluar dari program
