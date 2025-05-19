@@ -9,6 +9,8 @@ struct buku
 {
     int id, tahun;
     char judul[300], pengarang[100], penerbit[100], kategori[100];
+    buku *next;
+    buku *prev;
 };
 
 // fungsi validasi id buku, jadi kalo misal id kurang  atau lebih dari yang tertera, maka bakal balik false
@@ -62,7 +64,7 @@ void input_data()
             if (!validasi_id(b.id))
             {
                 cout << endl;
-                cout << "ID harus terdiri dari 5 digit. << endl";
+                cout << "ID harus terdiri dari 5 digit. "<< endl;
                 cout << endl;
             }
         } while (!validasi_id(b.id));
@@ -76,7 +78,7 @@ void input_data()
             if (!validasi_judul(b.judul))
             {
                 cout << endl;
-                cout << "Judul harus antara 1 sampai 300 karakter. << endl";
+                cout << "Judul harus antara 1 sampai 300 karakter." << endl;
                 cout << endl;
             }
         } while (!validasi_judul(b.judul));
@@ -99,7 +101,7 @@ void input_data()
             if (!validasi_tahun(b.tahun))
             {
                 cout << endl;
-                cout << "Tahun harus terdiri dari 4 digit. << endl";
+                cout << "Tahun harus terdiri dari 4 digit." << endl;
                 cout << endl;
             }
         } while (!validasi_tahun(b.tahun));
@@ -109,7 +111,7 @@ void input_data()
         cin.getline(b.kategori, 100);
 
         fwrite(&b, sizeof(buku), 1, fp); // nulis data buku ke file
-        cout << "Buku ke-" << (i + 1) << " berhasil ditambahkan. << endl << endl";
+        cout << "Buku ke-" << (i + 1) << " berhasil ditambahkan." << endl << endl;
     }
 
     fclose(fp);
@@ -150,7 +152,7 @@ void tampil_data()
              << setw(15) << b.pengarang << setw(1) << "|"
              << setw(15) << b.penerbit << setw(1) << "|"
              << setw(8) << b.tahun << setw(1) << "|"
-             << setw(15) << b.kategori.nama << setw(1) << "|" << endl;
+             << setw(15) << b.kategori << setw(1) << "|" << endl;
     }
     cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
 
@@ -264,17 +266,17 @@ void sorting_data() {
 //buat baca data buku dari file dengan menggunakan linked list, nanti dipake buat peminjaman
 buku* baca_data_buku()
 {
-    FILE *fp = fopen("data_buku.dat", "rb");
+    FILE *fp = fopen("data_buku.dat", "rb");//baca data buku
     if (!fp)
     {
         cout << "File tidak ditemukan!" << endl;
         return nullptr;
     }
 
-    buku *head = nullptr, *tail = nullptr, *baru;
+    buku *head = nullptr, *tail = nullptr, *baru;//deklarasi pointer biar bisa jadi linked list
 
     buku temp;
-    while (fread(&temp, sizeof(buku), 1, fp))
+    while (fread(&temp, sizeof(buku), 1, fp))//ini nulis linked list nya
     {
         baru = new buku;
         *baru = temp;
@@ -291,6 +293,73 @@ buku* baca_data_buku()
 
     fclose(fp);
     return head;
+}
+
+// fungsi buat cari buku berdasarkan id buku yang mau dipinjam
+buku* cari_buku_by_id(buku* head, int id)
+{
+    while (head)
+    {
+        if (head->id == id)
+            return head;
+        head = head->next;
+    }
+    return nullptr;
+}
+
+// fungsi buat pinjam buku
+void pinjam_buku()
+{
+    buku *head = baca_data_buku();// baca data buku dari file
+    if (!head)
+        return;
+
+    cout << "Daftar Buku yang Tersedia:" << endl;
+    cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
+    buku *temp = head;
+    int i = 1;
+    while (temp)
+    {
+        cout << setfill(' ') << setw(10) << i++ << setw(1) << "|"
+             << setw(8) << temp->id << setw(1) << "|"
+             << setw(30) << temp->judul << setw(1) << "|"
+             << setw(15) << temp->pengarang << setw(1) << "|"
+             << setw(15) << temp->penerbit << setw(1) << "|"
+             << setw(8) << temp->tahun << setw(1) << "|"
+             << setw(15) << temp->kategori << setw(1) << "|" << endl;
+        temp = temp->next;
+    }
+    cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
+
+    int idCari;
+    cout << "Masukkan ID buku yang ingin dipinjam: ";
+    cin >> idCari;
+
+    buku *b = cari_buku_by_id(head, idCari);
+    if (b)
+    {
+        cout << "\nData Buku yang Akan Dipinjam:" << endl;
+        cout << "ID Buku    : " << b->id << endl;
+        cout << "Judul      : " << b->judul << endl;
+        cout << "Pengarang  : " << b->pengarang << endl;
+        cout << "Penerbit   : " << b->penerbit << endl;
+        cout << "Tahun      : " << b->tahun << endl;
+        cout << "Kategori   : " << b->kategori << endl;
+
+        cout << "\nBuku berhasil dipinjam (simulasi)." << endl;
+    }
+    else
+    {
+        cout << "Buku dengan ID tersebut tidak ditemukan!" << endl;
+    }
+
+    // Bebaskan memori
+    while (head)
+    {
+        buku *hapus = head;
+        head = head->next;
+        delete hapus;
+    }
 }
 
 // fungsi buat keluar dari program
@@ -331,13 +400,13 @@ int main()
             tampil_data();
             break;
         case 3:
-            // searching_data();
+            searching_data();
             break;
         case 4:
-            // sorting_data();
+            sorting_data();
             break;
         case 5:
-            // peminjaman_data();
+            pinjam_buku();
             break;
         case 6:
             keluar();
