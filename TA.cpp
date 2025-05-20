@@ -361,7 +361,59 @@ void pinjam_buku()
         delete hapus;
     }
 }
+void pengembalian_buku()
+{
+    buku *head = baca_data_buku(); // baca semua data buku dari file
+    if (!head)
+        return;
 
+    cout << "Daftar Buku yang Terdaftar:" << endl;
+    cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
+    buku *temp = head;
+    int i = 1;
+    while (temp)
+    {
+        cout << setfill(' ') << setw(10) << i++ << setw(1) << "|"
+             << setw(8) << temp->id << setw(1) << "|"
+             << setw(30) << temp->judul << setw(1) << "|"
+             << setw(15) << temp->pengarang << setw(1) << "|"
+             << setw(15) << temp->penerbit << setw(1) << "|"
+             << setw(8) << temp->tahun << setw(1) << "|"
+             << setw(15) << temp->kategori << setw(1) << "|" << endl;
+        temp = temp->next;
+    }
+    cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
+
+    int idCari;
+    cout << "Masukkan ID buku yang ingin dikembalikan: ";
+    cin >> idCari;
+
+    buku *b = cari_buku_by_id(head, idCari);
+    if (b)
+    {
+        cout << "\nData Buku yang Akan Dikembalikan:" << endl;
+        cout << "ID Buku    : " << b->id << endl;
+        cout << "Judul      : " << b->judul << endl;
+        cout << "Pengarang  : " << b->pengarang << endl;
+        cout << "Penerbit   : " << b->penerbit << endl;
+        cout << "Tahun      : " << b->tahun << endl;
+        cout << "Kategori   : " << b->kategori << endl;
+
+        cout << "\nBuku berhasil dikembalikan (simulasi)." << endl;
+    }
+    else
+    {
+        cout << "Buku dengan ID tersebut tidak ditemukan!" << endl;
+    }
+
+    // Bebaskan memori
+    while (head)
+    {
+        buku *hapus = head;
+        head = head->next;
+        delete hapus;
+    }
+}
 // fungsi buat keluar dari program
 void keluar()
 {
@@ -383,7 +435,8 @@ int main()
         cout << "3. Searching Data Buku" << endl;
         cout << "4. Sorting Data Buku" << endl;
         cout << "5. Peminjaman Buku" << endl;
-        cout << "6. Keluar" << endl;
+        cout << "6. Pengembalian Buku" << endl;
+        cout << "7. Keluar" << endl;
         cout << setfill('=') << setw(50) << " " << endl;
 
         cout << "Masukkan Pilihan : ";
@@ -409,6 +462,9 @@ int main()
             pinjam_buku();
             break;
         case 6:
+            pengembalian_buku();
+            break;
+        case 7:
             keluar();
             break;
         default:
