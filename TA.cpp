@@ -346,7 +346,7 @@ void pinjam_buku()
         cout << "Tahun      : " << b->tahun << endl;
         cout << "Kategori   : " << b->kategori << endl;
 
-        cout << "\nBuku berhasil dipinjam (simulasi)." << endl;
+        cout << "\nBuku berhasil dipinjam." << endl;
     }
     else
     {
@@ -399,7 +399,7 @@ void pengembalian_buku()
         cout << "Tahun      : " << b->tahun << endl;
         cout << "Kategori   : " << b->kategori << endl;
 
-        cout << "\nBuku berhasil dikembalikan (simulasi)." << endl;
+        cout << "\nBuku berhasil dikembalikan." << endl;
     }
     else
     {
@@ -414,6 +414,120 @@ void pengembalian_buku()
         delete hapus;
     }
 }
+
+//fungsi untuk edit data buku
+void edit_data_buku()
+{
+    int idEdit;
+    cout << "Masukkan ID Buku yang ingin diedit: ";
+    cin >> idEdit;
+    cin.ignore();
+
+    FILE *fp = fopen("data_buku.dat", "rb");
+    if (!fp)
+    {
+        cout << "File tidak ditemukan!" << endl;
+        return;
+    }
+
+    buku arr[1000];
+    int n = 0;
+    while (fread(&arr[n], sizeof(buku), 1, fp))
+    {
+        n++;
+    }
+    fclose(fp);
+
+    bool found = false;
+    for (int i = 0; i < n; ++i)
+    {
+        if (arr[i].id == idEdit)
+        {
+            found = true;
+            cout << "\nData lama:\n";
+            cout << "Judul: " << arr[i].judul << endl;
+
+            cout << "\nMasukkan data baru:\n";
+            cout << "Judul: ";
+            cin.getline(arr[i].judul, 300);
+            cout << "Pengarang: ";
+            cin.getline(arr[i].pengarang, 100);
+            cout << "Penerbit: ";
+            cin.getline(arr[i].penerbit, 100);
+            cout << "Tahun: ";
+            cin >> arr[i].tahun;
+            cin.ignore();
+            cout << "Kategori: ";
+            cin.getline(arr[i].kategori, 100);
+
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "Data dengan ID tersebut tidak ditemukan!" << endl;
+        return;
+    }
+
+    fp = fopen("data_buku.dat", "wb");
+    fwrite(arr, sizeof(buku), n, fp);
+    fclose(fp);
+
+    cout << "Data berhasil diperbarui." << endl;
+}
+
+//fungsi untuk menghapus data buku
+void hapus_data_buku()
+{
+    int idHapus;
+    cout << "Masukkan ID Buku yang ingin dihapus: ";
+    cin >> idHapus;
+    cin.ignore();
+
+    FILE *fp = fopen("data_buku.dat", "rb");
+    if (!fp)
+    {
+        cout << "File tidak ditemukan!" << endl;
+        return;
+    }
+
+    buku arr[1000];
+    int n = 0;
+    while (fread(&arr[n], sizeof(buku), 1, fp))
+    {
+        n++;
+    }
+    fclose(fp);
+
+    bool found = false;
+    int j = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        if (arr[i].id != idHapus)
+        {
+            arr[j++] = arr[i];
+        }
+        else
+        {
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "Data dengan ID tersebut tidak ditemukan!" << endl;
+        return;
+    }
+
+    fp = fopen("data_buku.dat", "wb");
+    fwrite(arr, sizeof(buku), j, fp);
+    fclose(fp);
+
+    cout << "Data berhasil dihapus." << endl;
+}
+
+
 // fungsi buat keluar dari program
 void keluar()
 {
@@ -436,7 +550,8 @@ int main()
         cout << "4. Sorting Data Buku" << endl;
         cout << "5. Peminjaman Buku" << endl;
         cout << "6. Pengembalian Buku" << endl;
-        cout << "7. Keluar" << endl;
+        cout << "7. Edit Data Buku" << endl;
+        cout << "8. Keluar" << endl;
         cout << setfill('=') << setw(50) << " " << endl;
 
         cout << "Masukkan Pilihan : ";
@@ -465,6 +580,27 @@ int main()
             pengembalian_buku();
             break;
         case 7:
+            cout << "Pilih Fitur Edit Data: " << endl;
+            cout << "1. Edit Data Buku" << endl;
+            cout << "2. Hapus Data Buku" << endl;
+            cout << "Masukkan Pilihan: ";
+            int editPilihan;
+            cin >> editPilihan;
+            cin.ignore();
+            if (editPilihan == 1)
+            {
+                edit_data_buku();
+            }
+            else if (editPilihan == 2)
+            {
+                hapus_data_buku();
+            }
+            else
+            {
+                cout << "Pilihan tidak valid!" << endl;
+            }
+            break;
+        case 8:
             keluar();
             break;
         default:
