@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
-#include <cstdio>//ini mirip stdio.h yang sering dipake pak hersof
-#include <cstring>//ini buat library strlen
+#include <cstdio>  //ini mirip stdio.h yang sering dipake pak hersof
+#include <cstring> //ini buat library strlen
 using namespace std;
 
 // ini struct buku nya
@@ -30,7 +30,7 @@ bool validasi_tahun(int tahun)
 // fungsi validasi judul buku, jadi kalo misal judul kurang dari yang tertera, maka bakal balik false
 bool validasi_judul(const char *judul)
 {
-    //strlen secara singkat, dia menghitung panjang karakter stringnya(termasuk spasi) 
+    // strlen secara singkat, dia menghitung panjang karakter stringnya(termasuk spasi)
     int len = strlen(judul); // ini buat ngitung panjang judul, panjang judul itu harus antara 1-300 karakter
     return (len >= 1 && len <= 300);
 }
@@ -64,7 +64,7 @@ void input_data()
             if (!validasi_id(b.id))
             {
                 cout << endl;
-                cout << "ID harus terdiri dari 5 digit. "<< endl;
+                cout << "ID harus terdiri dari 5 digit. " << endl;
                 cout << endl;
             }
         } while (!validasi_id(b.id));
@@ -111,7 +111,8 @@ void input_data()
         cin.getline(b.kategori, 100);
 
         fwrite(&b, sizeof(buku), 1, fp); // nulis data buku ke file
-        cout << "Buku ke-" << (i + 1) << " berhasil ditambahkan." << endl << endl;
+        cout << "Buku ke-" << (i + 1) << " berhasil ditambahkan." << endl
+             << endl;
     }
 
     fclose(fp);
@@ -160,7 +161,8 @@ void tampil_data()
     cout << setfill('=') << setw(100) << " " << endl;
 }
 
-void searching_data() {
+void searching_data()
+{
     char cari[300];
     bool found = false;
     cout << "Masukkan Judul Buku yang dicari: ";
@@ -168,14 +170,17 @@ void searching_data() {
     cin.getline(cari, 300);
 
     FILE *fp = fopen("data_buku.dat", "rb");
-    if (!fp) {
+    if (!fp)
+    {
         cout << "Tidak dapat membuka file untuk membaca!" << endl;
         return;
     }
 
     buku b;
-    while (fread(&b, sizeof(buku), 1, fp)) {
-        if (strcmp(b.judul, cari) == 0) {
+    while (fread(&b, sizeof(buku), 1, fp))
+    {
+        if (strcmp(b.judul, cari) == 0)
+        {
             found = true;
             cout << "\nData ditemukan sebagai berikut:\n";
             cout << "ID: " << b.id << endl;
@@ -188,17 +193,20 @@ void searching_data() {
         }
     }
 
-    if (!found) {
+    if (!found)
+    {
         cout << "\nData tidak ditemukan.\n";
     }
 
     fclose(fp);
 }
 
-void sorting_data() {
-     int i, j;
+void sorting_data()
+{
+    int i, j;
     FILE *fp = fopen("data_buku.dat", "rb");
-    if (!fp) {
+    if (!fp)
+    {
         cout << "Tidak dapat membuka file!" << endl;
         return;
     }
@@ -207,12 +215,14 @@ void sorting_data() {
     int n = 0;
 
     // baca semua data ke array(menggunakan array karena bisa bebas sorting di RAM, yang cepat dan fleksibel)
-    while (fread(&arr[n], sizeof(buku), 1, fp)) {
+    while (fread(&arr[n], sizeof(buku), 1, fp))
+    {
         n++;
     }
     fclose(fp);
 
-    if (n == 0) {
+    if (n == 0)
+    {
         cout << "Tidak ada data buku untuk disorting!" << endl;
         return;
     }
@@ -226,14 +236,17 @@ void sorting_data() {
     cin.ignore();
 
     // Bubble Sort berdasarkan ID
-   for (int i = 0; i < n - 1; i++) {
-    for (int j = 0; j < n - i - 1; j++) {
-        if ((pilihan == 1 && arr[j].id > arr[j + 1].id) ||
-            (pilihan == 2 && arr[j].id < arr[j + 1].id)) {
-            swap(arr[j], arr[j + 1]);
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if ((pilihan == 1 && arr[j].id > arr[j + 1].id) ||
+                (pilihan == 2 && arr[j].id < arr[j + 1].id))
+            {
+                swap(arr[j], arr[j + 1]);
+            }
         }
     }
-}
 
     // Tampilkan hasil sorting
     cout << "\nData Buku Setelah Sorting Berdasarkan ID:\n";
@@ -250,7 +263,8 @@ void sorting_data() {
          << setw(15) << "Kategori" << setw(1) << "|" << endl;
     cout << setfill('-') << setw(125) << "-" << setfill(' ') << endl;
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         cout << setfill(' ') << setw(10) << i + 1 << setw(1) << "|"
              << setw(8) << arr[i].id << setw(1) << "|"
              << setw(30) << arr[i].judul << setw(1) << "|"
@@ -263,20 +277,20 @@ void sorting_data() {
     cout << setfill('=') << setw(100) << " " << endl;
 }
 
-//buat baca data buku dari file dengan menggunakan linked list, nanti dipake buat peminjaman
-buku* baca_data_buku()
+// buat baca data buku dari file dengan menggunakan linked list, nanti dipake buat peminjaman
+buku *baca_data_buku()
 {
-    FILE *fp = fopen("data_buku.dat", "rb");//baca data buku
+    FILE *fp = fopen("data_buku.dat", "rb"); // baca data buku
     if (!fp)
     {
         cout << "File tidak ditemukan!" << endl;
         return nullptr;
     }
 
-    buku *head = nullptr, *tail = nullptr, *baru;//deklarasi pointer biar bisa jadi linked list
+    buku *head = nullptr, *tail = nullptr, *baru; // deklarasi pointer biar bisa jadi linked list
 
     buku temp;
-    while (fread(&temp, sizeof(buku), 1, fp))//ini nulis linked list nya
+    while (fread(&temp, sizeof(buku), 1, fp)) // ini nulis linked list nya
     {
         baru = new buku;
         *baru = temp;
@@ -296,7 +310,7 @@ buku* baca_data_buku()
 }
 
 // fungsi buat cari buku berdasarkan id buku yang mau dipinjam
-buku* cari_buku_by_id(buku* head, int id)
+buku *cari_buku_by_id(buku *head, int id)
 {
     while (head)
     {
@@ -310,7 +324,7 @@ buku* cari_buku_by_id(buku* head, int id)
 // fungsi buat pinjam buku
 void pinjam_buku()
 {
-    buku *head = baca_data_buku();// baca data buku dari file
+    buku *head = baca_data_buku(); // baca data buku dari file
     if (!head)
         return;
 
@@ -359,6 +373,22 @@ void pinjam_buku()
         buku *hapus = head;
         head = head->next;
         delete hapus;
+    }
+
+    // Simpan data peminjaman ke file
+    // Menyimpan histori peminjaman
+    char tanggal[20];
+    cout << "Masukkan tanggal peminjaman (YYYY-MM-DD): ";
+    cin >> tanggal;
+
+    char namaFile[100];
+    sprintf(namaFile, "histori_pinjam_%s.txt", tanggal);
+    FILE *fpinjam = fopen(namaFile, "a");
+    if (fpinjam)
+    {
+        fprintf(fpinjam, "ID: %d | Judul: %s | Pengarang: %s | Penerbit: %s | Tahun: %d | Kategori: %s\n",
+                b->id, b->judul, b->pengarang, b->penerbit, b->tahun, b->kategori);
+        fclose(fpinjam);
     }
 }
 void pengembalian_buku()
@@ -413,9 +443,49 @@ void pengembalian_buku()
         head = head->next;
         delete hapus;
     }
+    // Simpan data pengembalian ke file
+    // Menyimpan histori pengembalian
+    char tanggal[20];
+    cout << "Masukkan tanggal pengembalian (YYYY-MM-DD): ";
+    cin >> tanggal;
+
+    char namaFile[100];
+    sprintf(namaFile, "histori_kembali_%s.txt", tanggal);
+    FILE *fkembali = fopen(namaFile, "a");
+    if (fkembali)
+    {
+        fprintf(fkembali, "ID: %d | Judul: %s | Pengarang: %s | Penerbit: %s | Tahun: %d | Kategori: %s\n",
+                b->id, b->judul, b->pengarang, b->penerbit, b->tahun, b->kategori);
+        fclose(fkembali);
+    }
 }
 
-//fungsi untuk edit data buku
+// fungsi untuk menampilkan data histori
+void tampilkan_histori(const char *jenis)
+{
+    char tanggal[20];
+    cout << "Masukkan tanggal histori yang ingin ditampilkan (YYYY-MM-DD): ";
+    cin >> tanggal;
+
+    char namaFile[100];
+    sprintf(namaFile, "histori_%s_%s.txt", jenis, tanggal);
+    FILE *f = fopen(namaFile, "r");
+    if (!f)
+    {
+        cout << "Histori tidak ditemukan untuk tanggal tersebut.\n";
+        return;
+    }
+
+    cout << "\nIsi Histori " << jenis << " pada " << tanggal << ":\n";
+    char line[500];
+    while (fgets(line, sizeof(line), f))
+    {
+        cout << line;
+    }
+    fclose(f);
+}
+
+// fungsi untuk edit data buku
 void edit_data_buku()
 {
     int idEdit;
@@ -466,18 +536,28 @@ void edit_data_buku()
 
     if (!found)
     {
-        cout << "Data dengan ID tersebut tidak ditemukan!" << endl;
+        cout << "Buku dengan ID tersebut tidak ditemukan!" << endl;
         return;
     }
 
+    // Tulis ulang seluruh data ke file setelah diedit
     fp = fopen("data_buku.dat", "wb");
-    fwrite(arr, sizeof(buku), n, fp);
-    fclose(fp);
+    if (!fp)
+    {
+        cout << "Gagal membuka file untuk menulis!" << endl;
+        return;
+    }
 
-    cout << "Data berhasil diperbarui." << endl;
+    for (int i = 0; i < n; ++i)
+    {
+        fwrite(&arr[i], sizeof(buku), 1, fp);
+    }
+
+    fclose(fp);
+    cout << "\nData buku berhasil diperbarui." << endl;
 }
 
-//fungsi untuk menghapus data buku
+// fungsi untuk menghapus data buku
 void hapus_data_buku()
 {
     int idHapus;
@@ -527,7 +607,6 @@ void hapus_data_buku()
     cout << "Data berhasil dihapus." << endl;
 }
 
-
 // fungsi buat keluar dari program
 void keluar()
 {
@@ -544,14 +623,13 @@ int main()
         cout << setfill(' ') << setw(30) << "MENU PILIHAN" << endl;
         cout << setfill('=') << setw(50) << " " << endl;
 
-        cout << "1. Input Data Buku" << endl;
+        cout << "1. Arsip Buku" << endl;
         cout << "2. Tampilkan Data Buku" << endl;
         cout << "3. Searching Data Buku" << endl;
         cout << "4. Sorting Data Buku" << endl;
         cout << "5. Peminjaman Buku" << endl;
         cout << "6. Pengembalian Buku" << endl;
-        cout << "7. Edit Data Buku" << endl;
-        cout << "8. Keluar" << endl;
+        cout << "7. Keluar" << endl;
         cout << setfill('=') << setw(50) << " " << endl;
 
         cout << "Masukkan Pilihan : ";
@@ -562,11 +640,59 @@ int main()
         switch (pilih)
         {
         case 1:
+            cout << "Pilih Fitur Edit Data: " << endl;
+            cout << "1. Input Data Buku" << endl;
+            cout << "2. Edit Data Buku" << endl;
+            cout << "3. Hapus Data Buku" << endl;
+            cout << "Masukkan Pilihan: ";
+            int editPilihan;
+            cin >> editPilihan;
+            cin.ignore();
+            if (editPilihan == 1)
+            {
+                input_data();
+            }
+            else if (editPilihan == 2)
+            {
+                edit_data_buku();
+            }
+            else if (editPilihan == 3)
+            {
+                hapus_data_buku();
+            }
+            else
+            {
+                cout << "Pilihan tidak valid!" << endl;
+            }
+            break;
             input_data();
             break;
         case 2:
-            tampil_data();
+            cout << "Tampilkan Data Buku\n";
+            cout << "a. Arsip\n";
+            cout << "b. Histori Peminjaman\n";
+            cout << "c. Histori Pengembalian\n";
+            cout << "Pilih submenu (a/b/c): ";
+            char subpilih;
+            cin >> subpilih;
+            cin.ignore();
+            switch (subpilih)
+            {
+            case 'a':
+                tampil_data();
+                break;
+            case 'b':
+                tampilkan_histori("pinjam");
+                break;
+            case 'c':
+                tampilkan_histori("kembali");
+                break;
+            default:
+                cout << "Pilihan submenu tidak valid!\n";
+                break;
+            }
             break;
+
         case 3:
             searching_data();
             break;
@@ -580,27 +706,6 @@ int main()
             pengembalian_buku();
             break;
         case 7:
-            cout << "Pilih Fitur Edit Data: " << endl;
-            cout << "1. Edit Data Buku" << endl;
-            cout << "2. Hapus Data Buku" << endl;
-            cout << "Masukkan Pilihan: ";
-            int editPilihan;
-            cin >> editPilihan;
-            cin.ignore();
-            if (editPilihan == 1)
-            {
-                edit_data_buku();
-            }
-            else if (editPilihan == 2)
-            {
-                hapus_data_buku();
-            }
-            else
-            {
-                cout << "Pilihan tidak valid!" << endl;
-            }
-            break;
-        case 8:
             keluar();
             break;
         default:
