@@ -164,11 +164,8 @@ void tampil_data()
 void searching_data()
 {
     char cari[300];
+    int idCari, pilihan;
     bool found = false;
-    cout << "Masukkan Judul Buku yang dicari: ";
-    cin.ignore();
-    cin.getline(cari, 300);
-
     FILE *fp = fopen("data_buku.dat", "rb");
     if (!fp)
     {
@@ -177,29 +174,68 @@ void searching_data()
     }
 
     buku b;
-    while (fread(&b, sizeof(buku), 1, fp))
+    cout << setfill('=') << setw(80) << " " << endl;
+    cout << setfill(' ') << setw(40) << "Pencarian Data Buku" << endl;
+    cout << setfill('=') << setw(80) << " " << endl;
+    cout << "Ingin mencari buku berdasarkan apa?\n";
+    cout << "1. ID Buku\n";
+    cout << "2. Judul Buku\n";
+    cout << "Pilih (1/2): ";
+    cin >> pilihan;
+    cin.ignore();
+
+    if (pilihan == 1)
     {
-        if (strcmp(b.judul, cari) == 0)
+        cout << "Masukkan ID Buku yang dicari: ";
+        cin >> idCari;
+        cin.ignore();
+        
+        while (fread(&b, sizeof(buku), 1, fp))
         {
-            found = true;
-            cout << "\nData ditemukan sebagai berikut:\n";
-            cout << "ID: " << b.id << endl;
-            cout << "Judul: " << b.judul << endl;
-            cout << "Pengarang: " << b.pengarang << endl;
-            cout << "Penerbit: " << b.penerbit << endl;
-            cout << "Tahun: " << b.tahun << endl;
-            cout << "Kategori: " << b.kategori << endl;
-            break; // berhenti setelah ketemu
+            if (b.id == idCari)
+            {
+                found = true;
+                cout << "\nData ditemukan:\n";
+                cout << "ID: " << b.id << endl;
+                cout << "Judul: " << b.judul << endl;
+                cout << "Pengarang: " << b.pengarang << endl;
+                cout << "Penerbit: " << b.penerbit << endl;
+                cout << "Tahun: " << b.tahun << endl;
+                cout << "Kategori: " << b.kategori << endl;
+                break;
+            }
         }
     }
-
-    if (!found)
+    else if (pilihan == 2)
     {
-        cout << "\nData tidak ditemukan.\n";
-    }
+        cout << "Masukkan Judul Buku yang dicari: ";
+        cin.getline(cari, 300);
 
+        while (fread(&b, sizeof(buku), 1, fp))
+        {
+            if (strcmp(b.judul, cari) == 0)
+            {
+                found = true;
+                cout << "\nData ditemukan:\n";
+                cout << "ID: " << b.id << endl;
+                cout << "Judul: " << b.judul << endl;
+                cout << "Pengarang: " << b.pengarang << endl;
+                cout << "Penerbit: " << b.penerbit << endl;
+                cout << "Tahun: " << b.tahun << endl;
+                cout << "Kategori: " << b.kategori << endl;
+                break;
+            }
+        }
+    }
+    else
+    {
+        cout << "Pilihan tidak valid!" << endl;
+    }
+if (!found && (pilihan == 1 || pilihan == 2))
+    {cout << "\nData tidak ditemukan.\n";}
     fclose(fp);
 }
+
 
 void sorting_data()
 {
